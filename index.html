@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - YourSite</title>
+    <style>
+        /* General page styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #34373a;
+            color: #ffffff;
+        }
+
+        /* Navbar styling */
+        #navbar {
+            width: 250px;
+            background-color: #1d1a1a;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        /* Container for navbar and main content */
+        .container {
+            display: flex;
+            width: 100%;
+            margin-left: 250px; /* Matches the navbar width */
+            padding: 20px;
+        }
+
+        /* Main content styling */
+        .main-content {
+            flex: 1; /* Allows main content to take remaining space */
+            padding: 20px;
+            max-width: 800px;
+        }
+
+        header {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #f8f3f3;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #444;
+            margin-bottom: 20px;
+        }
+
+        .tweet {
+            background-color: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .username {
+            color: #1DA1F2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar container to load navbar.html -->
+    <div id="navbar"></div>
+
+    <!-- Main content container to the right of navbar -->
+    <div class="container">
+        <div class="main-content">
+            <header>Home</header>
+
+            <div class="tweet">
+                <div class="username">@DavinSigma673</div>
+                <div class="content">Contoh tweet</div>
+            </div>
+
+            <div class="tweet">
+                <div class="username">@TalkTuah</div>
+                <div class="content">Spit on that thang 🔥</div>
+            </div>
+
+            <div class="tweet">
+                <div class="username">@PeterGriff</div>
+                <div class="content">I'm Peter</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        fetch("navbar.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("navbar").innerHTML = data;
+            })
+            .catch(error => console.error("Error loading navbar:", error));
+    </script>
+</body>
+</html>
