@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up - Tuwiter</title>
+    <style>
+        /* Basic reset and body styling */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f8fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        /* Container styling */
+        .login-container {
+            background-color: #fff;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .login-container h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .input-field {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccd6dd;
+            border-radius: 4px;
+        }
+        .login-button {
+            background-color: #1da1f2;
+            color: #fff;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-button:hover {
+            background-color: #1991da;
+        }
+        .forgot-password {
+            color: #1da1f2;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        .error-text {
+            color: red;
+        }
+        .success-text {
+            color: rgb(14, 226, 50);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Sign up</h2>
+        <form method="post" id="loginForm" autocomplete="off">
+            {% csrf_token %}
+            {% for fm in registerform %}
+                {{ fm.label_tag }}
+                {{ fm }}
+                {% for f in fm.errors %}
+                    <span class="error-text">{{ f }}</span>
+                {% endfor %}
+            {% endfor %}
+            <input type="submit" class="login-button" value="Register" />
+
+            {% if messages %}
+            {% for message in messages %}
+                <p class="{% if 'success' in message.tags %}success-text{% elif 'error' in message.tags %}error-text{% endif %}">
+                    {{ message }}
+                </p>
+            {% endfor %}
+            {% endif %}
+            <a href="login">Log in</a>
+        </form>
+    </div>
+
+</body>
+</html>
