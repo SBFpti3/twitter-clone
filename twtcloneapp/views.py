@@ -8,6 +8,9 @@ from django.contrib import messages
 
 # Create your views here.
 
+def home(request) :
+    return redirect(homepage)
+
 def signup(request) :
     form = CreateUser()
     if request.method == "POST" :
