@@ -15,10 +15,7 @@ from .models import Data
 
 class Home(APIView) :
     def get(self, request) :
-        return redirect(homepage)
-
-def home(request) :
-    return redirect(homepage)
+        return redirect(Homepage)
 
 def signup(request) :
     form = CreateUser()
@@ -54,5 +51,6 @@ def logout(request) :
     return redirect('login')
 
 @login_required(login_url='login')
-def homepage(request) :    
-    return render(request, 'twtcloneapp/index.html')
+class Homepage(APIView) :
+    def get(self, request) : 
+        return render(request, 'twtcloneapp/index.html')
