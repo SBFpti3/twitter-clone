@@ -9,6 +9,7 @@ from django.contrib import messages
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .serializers import Data_Serializer
 from .models import Data
 
@@ -25,6 +26,13 @@ class viewCRUD(APIView) :
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request) :
+        permission = [IsAuthenticated]
+        if not Data.objects.filter(user=request.user).exists() :
+            return Response({'message' : 'User is not registered.'}, status = status.HTTP_403_FORBIDDEN)
+        
+        if request.data.get('username') != request.user.username :
+            return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
+        
         serializer = Data_Serializer(data = request.data)
         if serializer.is_valid() :
             serializer.save()
@@ -34,6 +42,10 @@ class viewCRUD(APIView) :
 class viewCRUD2(APIView) :
     def put(self, request, id) :
         item = get_object_or_404(Data, id = id)
+
+        if item.user != request.user :
+            return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
+        
         serializer = Data_Serializer(item, data = request.data)
 
         if serializer.is_valid() :
@@ -43,8 +55,12 @@ class viewCRUD2(APIView) :
     
     def delete(self, request, id) :
         item = get_object_or_404(Data, id = id)
+
+        if item.user != request.user :
+            return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
+        
         item.delete()
-        return Response({'message' : 'Terhapus!'}, status = status.HTTP_200_OK)
+        return Response({'message' : 'Deleted!'}, status = status.HTTP_200_OK)
 
 def signup(request) :
     form = CreateUser()
