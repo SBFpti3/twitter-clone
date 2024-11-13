@@ -1,12 +1,21 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .forms import CreateUser, LoginForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
+from .serializers import Data_Serializer
+from .models import Data
 
 # Create your views here.
+
+class Home(APIView) :
+    def get(self, request) :
+        return redirect(homepage)
 
 def home(request) :
     return redirect(homepage)
