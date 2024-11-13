@@ -17,6 +17,34 @@ from .models import Data
 class Home(APIView) :
     def get(self, request) :
         return redirect('homepage')
+    
+class viewCRUD(APIView) :
+    def get(self, request) :
+        item = MataKuliah.objects.all()
+        serializer = MataKuliah_Serializer(item, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request) :
+        serializer = MataKuliah_Serializer(data = request.data)
+        if serializer.is_valid() :
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+class viewCRUD2(APIView) :
+    def put(self, request, id) :
+        item = get_object_or_404(MataKuliah, id = id)
+        serializer = MataKuliah_Serializer(item, data = request.data)
+
+        if serializer.is_valid() :
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_200_OK)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, id) :
+        item = get_object_or_404(MataKuliah, id = id)
+        item.delete()
+        return Response({'message' : 'Terhapus!'}, status = status.HTTP_200_OK)
 
 def signup(request) :
     form = CreateUser()
