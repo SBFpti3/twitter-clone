@@ -81,5 +81,7 @@ def logout(request) :
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class Homepage(APIView) :
-    def get(self, request) : 
-        return render(request, 'twtcloneapp/index.html')
+    def get(self, request) :
+        items = Data.objects.all()
+        serializer = Data_Serializer(items, many=True)
+        return render(request, 'twtcloneapp/index.html', {'items' : serializer.data})
