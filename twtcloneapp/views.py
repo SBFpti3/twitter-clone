@@ -4,6 +4,7 @@ from .forms import CreateUser, LoginForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib import messages
 from rest_framework.views import APIView
 from rest_framework import status
@@ -15,7 +16,7 @@ from .models import Data
 
 class Home(APIView) :
     def get(self, request) :
-        return redirect(Homepage)
+        return redirect('homepage')
 
 def signup(request) :
     form = CreateUser()
@@ -50,7 +51,7 @@ def logout(request) :
     auth.logout(request)
     return redirect('login')
 
-@login_required(login_url='login')
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class Homepage(APIView) :
     def get(self, request) : 
         return render(request, 'twtcloneapp/index.html')
