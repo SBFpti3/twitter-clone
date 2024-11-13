@@ -18,7 +18,7 @@ from .models import Data
 class Home(APIView) :
     def get(self, request) :
         return redirect('homepage')
-    
+
 class viewCRUD(APIView) :
 
     permission = [IsAuthenticated]
@@ -37,7 +37,7 @@ class viewCRUD(APIView) :
             serializer.save(user=request.user)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-    
+
 class viewCRUD2(APIView) :
 
     permission = [IsAuthenticated]
