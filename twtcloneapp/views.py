@@ -20,30 +20,32 @@ class Home(APIView) :
         return redirect('homepage')
     
 class viewCRUD(APIView) :
+
+    permission = [IsAuthenticated]
+    
     def get(self, request) :
         item = Data.objects.all()
         serializer = Data_Serializer(item, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request) :
-        permission = [IsAuthenticated]
-        if not Data.objects.filter(user=request.user).exists() :
-            return Response({'message' : 'User is not registered.'}, status = status.HTTP_403_FORBIDDEN)
-        
+    def post(self, request) :        
         if request.data.get('username') != request.user.username :
             return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
         
         serializer = Data_Serializer(data = request.data)
         if serializer.is_valid() :
-            serializer.save()
+            serializer.save(user=request.user)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
     
 class viewCRUD2(APIView) :
+
+    permission = [IsAuthenticated]
+
     def put(self, request, id) :
         item = get_object_or_404(Data, id = id)
 
-        if item.user != request.user :
+        if item.username != request.user.username :
             return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
         
         serializer = Data_Serializer(item, data = request.data)
@@ -56,7 +58,7 @@ class viewCRUD2(APIView) :
     def delete(self, request, id) :
         item = get_object_or_404(Data, id = id)
 
-        if item.user != request.user :
+        if item.username != request.user.username :
             return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
         
         item.delete()
@@ -73,7 +75,7 @@ def signup(request) :
     context = {'registerform' : form}
     return render(request, 'twtcloneapp/signup.html', context=context)
 
-def login(request) :
+def user_login(request) :
     form = LoginForm()
     if request.method == "POST" :
         form = LoginForm(request, data=request.POST)
@@ -91,7 +93,7 @@ def login(request) :
     context = {'loginform' : form}
     return render(request, 'twtcloneapp/login.html', context=context)
 
-def logout(request) :
+def user_logout(request) :
     auth.logout(request)
     return redirect('login')
 
