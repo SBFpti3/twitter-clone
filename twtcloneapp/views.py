@@ -108,10 +108,3 @@ class Homepage(APIView) :
         items = Data.objects.all()
         serializer = Data_Serializer(items, many=True)
         return render(request, 'twtcloneapp/index.html', {'items' : serializer.data})
-    
-def create_post(request) :
-    if request.method == "POST" :
-        content = request.POST.get('content')
-        if content :
-            Data.objects.create(username=request.user, content=content)
-        return redirect('homepage')
