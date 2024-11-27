@@ -1,0 +1,25 @@
+{% block content %}
+<h1>Edit Tweet</h1>
+
+<!-- i hate myself -->
+<!-- https://stackoverflow.com/questions/20640937/why-html5-forms-support-only-get-and-post-methods -->
+
+<form method="POST" action="{% url 'crud2' item.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="method" value="PUT">
+    <div class="form-group">
+        <label for="content">Tweet Content</label>
+        <textarea id="content" name="content" rows="4" cols="50">{{ item.content }}</textarea>
+    </div>
+    
+    <button type="submit" class="tweet-btn">Save Changes</button>
+</form>
+
+<form method="POST" action="{% url 'crud2' item.id %}" style="display:inline;">
+    {% csrf_token %}
+    <input type="hidden" name="method" value="DELETE">
+    <button type="submit" class="tweet-red-btn">Delete</button>
+</form>
+
+<a href="{% url 'homepage' %}" class="btn">Back to Home</a>
+{% endblock %}

@@ -6,6 +6,7 @@
 <head>
     <link rel='stylesheet'
         href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chanda Navbar</title>
@@ -86,13 +87,29 @@
             font-weight: bold;
             border-radius: 25px;
             margin-top: 10px;
-            margin-left: 5px;
             cursor: pointer;
             transition: background-color 0.2s;
         }
 
         .tweet-btn:hover {
-            background-color: #1991da;
+            background-color: #1a608b;
+        }
+
+        .tweet-red-btn {
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 25px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .tweet-red-btn:hover {
+            background-color: #87302d;
         }
 
         /* Log Out button */
@@ -218,6 +235,14 @@
         <div class="tweet">
             <div class="username">@{{ item.username }}</div>
             <div class="content">{{ item.content }}</div>
+
+            {% if item.username == request.user.username %}
+            <div class="tweet-edit-btn">
+                <form action="{% url 'crud2' item.id %}" method="get" style="display: inline;">
+                    <button type="submit" class="tweet-btn">Edit</button>
+                </form>
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
 </body>

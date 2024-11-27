@@ -20,51 +20,6 @@ class Home(APIView) :
     def get(self, request) :
         return redirect('homepage')
 
-class viewCRUD(APIView) :
-    permission = [IsAuthenticated]
-    renderer_classes = [JSONRenderer]
-
-    def get(self, request) :
-        item = Data.objects.all()
-        serializer = Data_Serializer(item, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request) :
-        content = request.data.get('content')
-        username = request.user.username
-        user_instance = request.user.pk
-        # return Response({'message': request.user.username}, status=status.HTTP_400_BAD_REQUEST)
-        if content :
-            serializer = Data_Serializer(data={'content': content, 'username': username, 'user' : user_instance})        
-            if serializer.is_valid() :
-                serializer.save()
-                return redirect('homepage')
-            else :
-                return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-        return Response({'message': 'Content is required!'}, status=status.HTTP_400_BAD_REQUEST)
-
-class viewCRUD2(APIView) :
-
-    permission = [IsAuthenticated]
-    renderer_classes = [JSONRenderer]
-
-    # untuk put (edit) dan delete belum di handle secara full
-
-    def put(self, request, id) :
-        item = get_object_or_404(Data, id = id)        
-        serializer = Data_Serializer(item, data = request.data)
-
-        if serializer.is_valid() :
-            serializer.save()
-            return Response(serializer.data, status = status.HTTP_200_OK)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, id) :
-        item = get_object_or_404(Data, id = id)
-        
-        item.delete()
-        return Response({'message' : 'Deleted!'}, status = status.HTTP_200_OK)
-
 def signup(request) :
     form = CreateUser()
     if request.method == "POST" :
@@ -106,3 +61,49 @@ class Homepage(APIView) :
         items.reverse()
         serializer = Data_Serializer(items, many=True)
         return render(request, 'twtcloneapp/index.html', {'items' : serializer.data})
+    
+class viewCRUD(APIView) :
+    permission = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
+
+    def get(self, request) :
+        item = Data.objects.all()
+        serializer = Data_Serializer(item, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request) :
+        content = request.data.get('content')
+        username = request.user.username
+        user_instance = request.user.pk
+        # return Response({'message': request.user.username}, status=status.HTTP_400_BAD_REQUEST)
+        if content :
+            serializer = Data_Serializer(data={'content': content, 'username': username, 'user' : user_instance})        
+            if serializer.is_valid() :
+                serializer.save()
+                return redirect('homepage')
+            else :
+                return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Content is required!'}, status=status.HTTP_400_BAD_REQUEST)
+
+class viewCRUD2(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, id):
+        item = get_object_or_404(Data, id=id)
+        if item.user != request.user:
+            return redirect('homepage')
+        return render(request, 'twtcloneapp/edit.html', {'item': item})
+
+    def post(self, request, id):
+        item = get_object_or_404(Data, id=id)
+        if request.POST.get('method') == 'PUT':
+            item.content = request.POST.get('content')
+            if item.content:
+                item.save()
+                return redirect('homepage')
+            return Response({'message': 'Content is required!'}, status=status.HTTP_400_BAD_REQUEST)
+
+        elif request.POST.get('method') == 'DELETE':
+            item.delete()
+            return redirect('homepage')
+
+        return render(request, 'twtcloneapp/edit.html', {'item': item})
