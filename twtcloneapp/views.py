@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
 from .serializers import Data_Serializer
 from .models import Data
 
@@ -20,23 +21,27 @@ class Home(APIView) :
         return redirect('homepage')
 
 class viewCRUD(APIView) :
-
     permission = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
     
     def get(self, request) :
         item = Data.objects.all()
         serializer = Data_Serializer(item, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request) :        
-        if request.data.get('username') != request.user.username :
-            return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
-        
-        serializer = Data_Serializer(data = request.data)
-        if serializer.is_valid() :
-            serializer.save(user=request.user)
-            return Response(serializer.data, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    def post(self, request) :
+        content = request.data.get('content')
+        username = request.user.username
+        user_instance = request.user.pk
+        # return Response({'message': request.user.username}, status=status.HTTP_400_BAD_REQUEST)
+        if content :
+            serializer = Data_Serializer(data={'content': content, 'username': username, 'user' : user_instance})        
+            if serializer.is_valid() :
+                serializer.save()
+                return redirect('homepage')
+            else :
+                return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Content is required!'}, status=status.HTTP_400_BAD_REQUEST)
 
 class viewCRUD2(APIView) :
 
@@ -103,3 +108,10 @@ class Homepage(APIView) :
         items = Data.objects.all()
         serializer = Data_Serializer(items, many=True)
         return render(request, 'twtcloneapp/index.html', {'items' : serializer.data})
+    
+def create_post(request) :
+    if request.method == "POST" :
+        content = request.POST.get('content')
+        if content :
+            Data.objects.create(username=request.user, content=content)
+        return redirect('homepage')

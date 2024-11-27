@@ -2,8 +2,10 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link rel='stylesheet'
+        href='https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-straight/css/uicons-regular-straight.css'>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chanda Navbar</title>
@@ -41,19 +43,19 @@
             margin-bottom: 20px;
         }
 
-        .navbar .logo-icon{
+        .navbar .logo-icon {
             font-size: 1.6em;
             color: #c7c4e4;
             margin-right: 5px;
 
         }
-        
+
         /* Navigation links */
-        .navbar a{
+        .navbar a {
             text-decoration: none;
             color: #f8f3f3;
             font-size: 1.1em;
-            margin: 3px ;
+            margin: 3px;
             display: flex;
             align-items: center;
             padding: 10px;
@@ -71,7 +73,7 @@
         .navbar a .icon {
             font-size: 1.5em;
             margin-right: 15px;
-            color:#c7c4e4;
+            color: #c7c4e4;
         }
 
         /* Tweet button */
@@ -111,10 +113,12 @@
 
         /* Main content area */
         .main-content {
-            margin-left: 270px; /* Adjusted for the navbar width + padding */
+            margin-left: 270px;
+            /* Adjusted for the navbar width + padding */
             padding: 20px;
             width: 100%;
-            max-width: 800px; /* Main feed width similar to Twitter */
+            max-width: 800px;
+            /* Main feed width similar to Twitter */
         }
 
         /* Header style */
@@ -145,23 +149,49 @@
             margin-top: 10px;
             color: #e1e8ed;
         }
+
+        .post-form {
+            background-color: #222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .post-form textarea {
+            width: 100%;
+            background-color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            font-size: 1em;
+            resize: none;
+        }
+
+        .post-form textarea::placeholder {
+            color: #888;
+        }
+
+        .post-form button {
+            display: block;
+            margin-top: 10px;
+            width: 100%;
+        }
     </style>
 </head>
+
 <body>
     <!-- Navbar -->
     <div class="navbar">
         <!-- Logo -->
-        <div class="logo"><span class ="logo-icon"><i class="fi fi-rs-teddy-bear"></span></i> Chanda</div>
-        
+        <div class="logo"><span class="logo-icon"><i class="fi fi-rs-teddy-bear"></span></i> Chanda</div>
+
         <!-- Navigation Links -->
         <a href="#home"><span class="icon"><i class="fi fi-rs-home"></i></span>Home</a>
         <a href="#explore"><span class="icon"><i class="fi fi-rs-search"></i></span>Explore</a>
         <a href="#notifications"><span class="icon"><i class="fi fi-rs-megaphone"></i></span>Notifications</a>
         <a href="#messages"><span class="icon"><i class="fi fi-rs-comment"></i></span>Messages</a>
         <a href="#profile"><span class="icon"><i class="fi fi-rs-circle-user"></i></span>Profile</a>
-        
-        <!-- Tweet Button -->
-        <button class="tweet-btn">Post</button>
 
         <!-- Log out Button -->
         <form action="{% url 'logout' %}" method="post">
@@ -172,14 +202,24 @@
 
     <!-- Main Content Area -->
     <div class="main-content">
-        <!-- Header -->
         <header>Post</header>
+
+        <div class="post-form">
+            <form action="{% url 'crud' %}" method="post">
+                {% csrf_token %}
+                <textarea name="content" placeholder="What's happening?" rows="3" required maxlength="280"></textarea>
+                <button type="submit" class="tweet-btn">Post</button>
+            </form>
+        </div>
+
+        <hr style="border: 1px solid #444; margin: 20px 0;">
+
         {% for item in items %}
-            <div class="tweet">
-                <div class="username">@{{ item.username }}</div>
-                <div class="content">{{ item.content }}</div>
-            </div>
+        <div class="tweet">
+            <div class="username">@{{ item.username }}</div>
+            <div class="content">{{ item.content }}</div>
+        </div>
         {% endfor %}
-    </div>
 </body>
+
 </html>
