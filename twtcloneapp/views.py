@@ -102,5 +102,7 @@ def user_logout(request) :
 class Homepage(APIView) :
     def get(self, request) :
         items = Data.objects.all()
+        items = list(items)
+        items.reverse()
         serializer = Data_Serializer(items, many=True)
         return render(request, 'twtcloneapp/index.html', {'items' : serializer.data})
