@@ -64,7 +64,7 @@ class Homepage(APIView) :
     
 class viewCRUD(APIView) :
     permission = [IsAuthenticated]
-    renderer_classes = [JSONRenderer]
+    renderer = [JSONRenderer]
 
     def get(self, request) :
         item = Data.objects.all()
@@ -86,7 +86,8 @@ class viewCRUD(APIView) :
         return Response({'message': 'Content is required!'}, status=status.HTTP_400_BAD_REQUEST)
 
 class viewCRUD2(APIView):
-    permission_classes = [IsAuthenticated]
+    permission = [IsAuthenticated]
+
     def get(self, request, id):
         item = get_object_or_404(Data, id=id)
         if item.user != request.user:
@@ -96,14 +97,13 @@ class viewCRUD2(APIView):
     def post(self, request, id):
         item = get_object_or_404(Data, id=id)
         if request.POST.get('method') == 'PUT':
-            item.content = request.POST.get('content')
-            if item.content:
-                item.save()
-                return redirect('homepage')
-            return Response({'message': 'Content is required!'}, status=status.HTTP_400_BAD_REQUEST)
+            content = request.data.get('content')
+            item.content = content
+            item.save()
+            return redirect('homepage')
 
         elif request.POST.get('method') == 'DELETE':
             item.delete()
             return redirect('homepage')
 
-        return render(request, 'twtcloneapp/edit.html', {'item': item})
+        return Response({'message': 'BAD REQUESTTTTTTTTTT!'}, status=status.HTTP_400_BAD_REQUEST)

@@ -10,7 +10,7 @@
     <div class="form-group">
         <label for="content">Tweet Content</label>
         <br><br>
-        <textarea id="content" name="content" rows="4" cols="50">{{ item.content }}</textarea>
+        <textarea id="content" name="content" rows="4" cols="50" required minlength="1">{{ item.content }}</textarea>
     </div>
     <br>
     <button type="submit" class="tweet-btn">Save Changes</button>
