@@ -23,12 +23,12 @@ class Home(APIView) :
 class viewCRUD(APIView) :
     permission = [IsAuthenticated]
     renderer_classes = [JSONRenderer]
-    
+
     def get(self, request) :
         item = Data.objects.all()
         serializer = Data_Serializer(item, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     def post(self, request) :
         content = request.data.get('content')
         username = request.user.username
@@ -46,13 +46,12 @@ class viewCRUD(APIView) :
 class viewCRUD2(APIView) :
 
     permission = [IsAuthenticated]
+    renderer_classes = [JSONRenderer]
+
+    # untuk put (edit) dan delete belum di handle secara full
 
     def put(self, request, id) :
-        item = get_object_or_404(Data, id = id)
-
-        if item.username != request.user.username :
-            return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
-        
+        item = get_object_or_404(Data, id = id)        
         serializer = Data_Serializer(item, data = request.data)
 
         if serializer.is_valid() :
@@ -62,9 +61,6 @@ class viewCRUD2(APIView) :
     
     def delete(self, request, id) :
         item = get_object_or_404(Data, id = id)
-
-        if item.username != request.user.username :
-            return Response({'message' : 'NOT ALLOWED!!!'}, status = status.HTTP_403_FORBIDDEN)
         
         item.delete()
         return Response({'message' : 'Deleted!'}, status = status.HTTP_200_OK)
