@@ -40,7 +40,7 @@ def user_login(request) :
             password = request.POST.get('password')
             user = authenticate(request, username=username, password=password)
             if user is not None :
-                auth.login(request, user)
+                login(request, user)
                 return redirect('home')
             else :
                 messages.error(request, "Wrong username or password.")
@@ -50,7 +50,7 @@ def user_login(request) :
     return render(request, 'twtcloneapp/login.html', context=context)
 
 def user_logout(request) :
-    auth.logout(request)
+    logout(request)
     return redirect('login')
 
 @method_decorator(login_required(login_url='login'), name='dispatch')
