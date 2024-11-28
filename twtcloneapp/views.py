@@ -53,6 +53,9 @@ def user_logout(request) :
     logout(request)
     return redirect('login')
 
+def error_view(request) :
+    return render(request, 'twtcloneapp/error.html')
+
 @method_decorator(login_required(login_url='login'), name='dispatch')
 class Homepage(APIView) :
     def get(self, request) :

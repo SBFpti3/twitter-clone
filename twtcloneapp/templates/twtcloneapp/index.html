@@ -221,7 +221,7 @@
 
             {% if item.username == request.user.username %}
             <div>
-                <form action="{% url 'crud2' item.id %}" method="get" style="display: inline;">
+                <form action="{% url 'edit' item.id %}" method="get" style="display: inline;">
                     <button type="submit" class="tweet-btn">Edit</button>
                 </form>
             </div>
